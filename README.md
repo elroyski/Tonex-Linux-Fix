@@ -19,7 +19,7 @@ the card appears in `aplay -l`.
 | USB Vendor:Product | `1963:0068` |
 | Audio class | UAC2 (USB Audio Class 2.0) |
 | Format | S32_LE (24-bit in 32-bit container) |
-| Sample rate | **44100 Hz** or **48000 Hz** |
+| Sample rate | **44100 Hz** |
 | Channels | 2 (stereo) |
 | CDC baud rate | 115200, 8N1 |
 
@@ -58,25 +58,6 @@ sudo ./uninstall.sh
 
 ---
 
-## Sample rate configuration
-
-The default sample rate is **48000 Hz**. To use **44100 Hz**, set the
-`TONEX_SAMPLE_RATE` environment variable or run the init script manually:
-
-```bash
-# Run manually at 44100 Hz
-sudo TONEX_SAMPLE_RATE=44100 /usr/local/lib/tonex-init/tonex_udev_init.sh
-
-# Or call the Python script directly
-sudo /usr/local/lib/tonex-init/venv/bin/python3 \
-    /usr/local/lib/tonex-init/tonex_init.py --rate 44100
-```
-
-To make 44100 Hz the permanent default, edit the udev rule and add
-`ENV{TONEX_SAMPLE_RATE}="44100"` before the `RUN+=` entry.
-
----
-
 ## Test
 
 Unplug and replug the ToneX USB cable, wait 3 seconds:
@@ -85,12 +66,9 @@ Unplug and replug the ToneX USB cable, wait 3 seconds:
 # Check the card is visible
 aplay -l | grep -i tonex
 
-# Record test (3 seconds) at 44100 Hz
+# Record test (3 seconds)
 CARD=$(aplay -l | grep -i tonex | grep -oP 'card \K\d+' | head -1)
 arecord -D "hw:${CARD},0" -d 3 -f S32_LE -r 44100 -c 2 /tmp/test.wav && aplay /tmp/test.wav
-
-# Record test at 48000 Hz
-arecord -D "hw:${CARD},0" -d 3 -f S32_LE -r 48000 -c 2 /tmp/test.wav && aplay /tmp/test.wav
 ```
 
 ---
@@ -98,7 +76,7 @@ arecord -D "hw:${CARD},0" -d 3 -f S32_LE -r 48000 -c 2 /tmp/test.wav && aplay /t
 ## Reaper configuration
 
 - Audio system: **JACK** (via PipeWire) or **ALSA**
-- Sample rate: **44100 Hz** or **48000 Hz** — must match the rate configured at init
+- Sample rate: **44100 Hz**
 - Buffer: 512 samples (start here, reduce if needed)
 - Device (ALSA): `hw:X,0` where X is the card number from `aplay -l`
 - Device (JACK/PipeWire): `ToneX Pro`
@@ -142,4 +120,3 @@ sudo dmesg | grep -i "1963\|tonex" | tail -20
 # Run initialization manually (without replug)
 sudo /usr/local/lib/tonex-init/tonex_udev_init.sh
 ```
-
