@@ -57,8 +57,9 @@ line() {
 }
 line_kv() {
     local key="$1" val="$2"
-    # visible width: 1(space) + 2 + 14(key) + 2 + len(val) + pad + 1(space) = W
-    local pad=$(( W - 20 - ${#val} ))
+    # between-borders width must equal W+2 (same as separator)
+    # 1(space) + 2 + 14(key) + 2 + len(val) + pad + 1(space) = W+2
+    local pad=$(( W - 18 - ${#val} ))
     bdr "│"
     printf " ${CYAN}  %-14s${RESET}  %s%*s " "$key" "$val" "$pad" ""
     bdr "│"
