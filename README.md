@@ -60,25 +60,20 @@ sudo ./uninstall.sh
 
 ## Sample rate configuration
 
-The default sample rate is **44100 Hz**. To use **48000 Hz**, set the
-`TONEX_SAMPLE_RATE` environment variable in the udev rule or run the init
-script manually:
+The default sample rate is **48000 Hz**. To use **44100 Hz**, set the
+`TONEX_SAMPLE_RATE` environment variable or run the init script manually:
 
 ```bash
-# Run manually at 48000 Hz
-sudo TONEX_SAMPLE_RATE=48000 /usr/local/lib/tonex-init/tonex_udev_init.sh
+# Run manually at 44100 Hz
+sudo TONEX_SAMPLE_RATE=44100 /usr/local/lib/tonex-init/tonex_udev_init.sh
 
 # Or call the Python script directly
 sudo /usr/local/lib/tonex-init/venv/bin/python3 \
-    /usr/local/lib/tonex-init/tonex_init.py --rate 48000
+    /usr/local/lib/tonex-init/tonex_init.py --rate 44100
 ```
 
-To make 48000 Hz the permanent default, edit the udev rule:
-
-```bash
-sudo nano /etc/udev/rules.d/99-tonex.rules
-# Change RUN+="..." to include ENV{TONEX_SAMPLE_RATE}="48000"
-```
+To make 44100 Hz the permanent default, edit the udev rule and add
+`ENV{TONEX_SAMPLE_RATE}="44100"` before the `RUN+=` entry.
 
 ---
 
@@ -212,24 +207,20 @@ sudo ./uninstall.sh
 
 ## Konfiguracja sample rate
 
-Domyślna częstotliwość próbkowania to **44100 Hz**. Aby użyć **48000 Hz**, ustaw
+Domyślna częstotliwość próbkowania to **48000 Hz**. Aby użyć **44100 Hz**, ustaw
 zmienną środowiskową `TONEX_SAMPLE_RATE` lub wywołaj skrypt ręcznie:
 
 ```bash
-# Ręczne uruchomienie z 48000 Hz
-sudo TONEX_SAMPLE_RATE=48000 /usr/local/lib/tonex-init/tonex_udev_init.sh
+# Ręczne uruchomienie z 44100 Hz
+sudo TONEX_SAMPLE_RATE=44100 /usr/local/lib/tonex-init/tonex_udev_init.sh
 
 # Lub bezpośrednio przez Python
 sudo /usr/local/lib/tonex-init/venv/bin/python3 \
-    /usr/local/lib/tonex-init/tonex_init.py --rate 48000
+    /usr/local/lib/tonex-init/tonex_init.py --rate 44100
 ```
 
-Aby ustawić 48000 Hz na stałe, edytuj regułę udev:
-
-```bash
-sudo nano /etc/udev/rules.d/99-tonex.rules
-# Dodaj ENV{TONEX_SAMPLE_RATE}="48000" do reguły RUN+=
-```
+Aby ustawić 44100 Hz na stałe, edytuj regułę udev i dodaj
+`ENV{TONEX_SAMPLE_RATE}="44100"` przed wpisem `RUN+=`.
 
 ---
 

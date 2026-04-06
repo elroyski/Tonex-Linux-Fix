@@ -9,7 +9,7 @@ LOG_DIR="$INSTALL_DIR/logs"
 LOG="$LOG_DIR/tonex_udev_init.log"
 
 # Sample rate: 44100 or 48000. Override via TONEX_SAMPLE_RATE env var.
-SAMPLE_RATE="${TONEX_SAMPLE_RATE:-44100}"
+SAMPLE_RATE="${TONEX_SAMPLE_RATE:-48000}"
 
 mkdir -p "$LOG_DIR"
 exec >> "$LOG" 2>&1

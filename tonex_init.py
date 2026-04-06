@@ -34,9 +34,9 @@ CS_CLOCK_VALID_CONTROL = 0x02
 def find_tonex():
     dev = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
     if dev is None:
-        print("BŁĄD: ToneX nie znaleziony.")
+        print("ERROR: ToneX not found.")
         sys.exit(1)
-    print(f"Znaleziono: {dev.manufacturer} {dev.product} (s/n {dev.serial_number})")
+    print(f"Found: {dev.manufacturer} {dev.product} (s/n {dev.serial_number})")
     return dev
 
 
@@ -47,9 +47,9 @@ def detach_kernel_drivers(dev, interfaces):
             if dev.is_kernel_driver_active(iface):
                 dev.detach_kernel_driver(iface)
                 detached.append(iface)
-                print(f"Odepnięto kernel driver z interface {iface}")
+                print(f"Detached kernel driver from interface {iface}")
         except usb.core.USBError as e:
-            print(f"Uwaga: nie można odpiąć interface {iface}: {e}")
+            print(f"Warning: could not detach interface {iface}: {e}")
     return detached
 
 
@@ -57,9 +57,9 @@ def reattach_kernel_drivers(dev, interfaces):
     for iface in interfaces:
         try:
             dev.attach_kernel_driver(iface)
-            print(f"Przywrócono kernel driver na interface {iface}")
+            print(f"Reattached kernel driver on interface {iface}")
         except usb.core.USBError as e:
-            print(f"Uwaga: nie można przywrócić interface {iface}: {e}")
+            print(f"Warning: could not reattach interface {iface}: {e}")
 
 
 def set_line_coding(dev):
@@ -85,7 +85,7 @@ def get_clock_valid(dev):
         result = dev.ctrl_transfer(0xA1, GET_CUR, wValue, wIndex, 1)
         return result[0]
     except usb.core.USBError as e:
-        print(f"  Uwaga: nie można odczytać clock valid: {e}")
+        print(f"  Warning: could not read clock valid: {e}")
         return None
 
 
@@ -96,7 +96,7 @@ def get_sample_rate(dev):
         result = dev.ctrl_transfer(0xA1, GET_CUR, wValue, wIndex, 4)
         return struct.unpack('<I', bytes(result))[0]
     except usb.core.USBError as e:
-        print(f"  Uwaga: nie można odczytać sample rate: {e}")
+        print(f"  Warning: could not read sample rate: {e}")
         return None
 
 
@@ -118,43 +118,43 @@ def check_clock(dev):
 def main():
     parser = argparse.ArgumentParser(description="ToneX USB initialization")
     parser.add_argument(
-        "--rate", type=int, default=44100, choices=SUPPORTED_RATES,
-        help="Sample rate to configure: 44100 or 48000 (default: 44100)",
+        "--rate", type=int, default=48000, choices=SUPPORTED_RATES,
+        help="Sample rate to configure: 44100 or 48000 (default: 48000)",
     )
     args = parser.parse_args()
     sample_rate = args.rate
 
     dev = find_tonex()
-    detach_kernel_drivers(dev, CDC_INTERFACES)
+    detached_cdc   = detach_kernel_drivers(dev, CDC_INTERFACES)
     detached_audio = detach_kernel_drivers(dev, AUDIO_INTERFACES)
 
     try:
-        # 1. CDC init (jak Windows)
+        # 1. CDC init (replicates Windows driver behaviour)
         set_line_coding(dev)
         set_control_line_state(dev)
 
-        # 2. Sprawdź stan zegara przed
-        print("\nStan zegara przed init:")
-        valid_before, rate_before = check_clock(dev)
+        # 2. Check clock state before
+        print("\nClock state before init:")
+        check_clock(dev)
 
-        # 3. Ustaw częstotliwość próbkowania
+        # 3. Set sample rate
         set_sample_rate(dev, sample_rate)
         time.sleep(0.1)
 
-        # 4. Sprawdź stan zegara po
-        print("Stan zegara po SET_SAM_FREQ:")
-        valid_after, rate_after = check_clock(dev)
+        # 4. Check clock state after
+        print("Clock state after SET_SAM_FREQ:")
+        valid_after, _ = check_clock(dev)
 
         if valid_after == 1:
-            print("\nZegar aktywny — urządzenie gotowe do streamowania!")
+            print("\nClock active — device ready for streaming!")
         else:
-            print(f"\nUwaga: zegar nadal nieaktywny (valid={valid_after})")
+            print(f"\nWarning: clock still inactive (valid={valid_after})")
 
     except usb.core.USBError as e:
-        print(f"BŁĄD USB: {e}")
+        print(f"USB ERROR: {e}")
         sys.exit(1)
     finally:
-        reattach_kernel_drivers(dev, CDC_INTERFACES)
+        reattach_kernel_drivers(dev, detached_cdc)
         reattach_kernel_drivers(dev, detached_audio)
         time.sleep(0.5)
 
