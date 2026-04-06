@@ -57,9 +57,8 @@ line() {
 }
 line_kv() {
     local key="$1" val="$2"
-    local txt="${CYAN}  ${key}${RESET}  ${val}"
-    local visible="${key}    ${val}"          # length without escapes
-    local pad=$(( W - ${#visible} - 2 ))
+    # visible width: 1(space) + 2 + 14(key) + 2 + len(val) + pad + 1(space) = W
+    local pad=$(( W - 20 - ${#val} ))
     bdr "│"
     printf " ${CYAN}  %-14s${RESET}  %s%*s " "$key" "$val" "$pad" ""
     bdr "│"
