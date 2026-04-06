@@ -13,7 +13,7 @@ fi
 echo "Installing ToneX init to $INSTALL_DIR ..."
 
 # 1. Copy files
-mkdir -p "$INSTALL_DIR"
+mkdir -p "$INSTALL_DIR" "$INSTALL_DIR/logs"
 cp tonex_init.py "$INSTALL_DIR/"
 cp tonex_udev_init.sh "$INSTALL_DIR/"
 chmod +x "$INSTALL_DIR/tonex_udev_init.sh"
