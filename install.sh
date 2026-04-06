@@ -35,19 +35,21 @@ EOF
 # 4. Reload udev
 udevadm control --reload-rules
 
-CYAN='\033[0;36m'
-BOLD='\033[1m'
-YELLOW='\033[1;33m'
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-DIM='\033[2m'
-RESET='\033[0m'
+CYAN=$'\033[0;36m'
+BOLD=$'\033[1m'
+YELLOW=$'\033[1;33m'
+GREEN=$'\033[0;32m'
+BLUE=$'\033[0;34m'
+DIM=$'\033[2m'
+RESET=$'\033[0m'
 
 W=63
 bdr() { printf "${CYAN}${1}${RESET}"; }   # border character(s)
 line() {
     local txt="$1"
-    local pad=$(( W - ${#txt} ))
+    local visible
+    visible=$(printf '%s' "$txt" | sed 's/\x1b\[[0-9;]*m//g')
+    local pad=$(( W - ${#visible} ))
     bdr "│"
     printf " %s%*s " "$txt" "$pad" ""
     bdr "│"
