@@ -75,11 +75,10 @@ arecord -D "hw:${CARD},0" -d 3 -f S32_LE -r 44100 -c 2 /tmp/test.wav && aplay /t
 
 ## Reaper configuration
 
-- Audio system: **JACK** (via PipeWire) or **ALSA**
+- Audio system: **ALSA**
 - Sample rate: **44100 Hz**
 - Buffer: 512 samples (start here, reduce if needed)
-- Device (ALSA): `hw:X,0` where X is the card number from `aplay -l`
-- Device (JACK/PipeWire): `ToneX Pro`
+- Device: `hw:ToneX ; USB-Audio - ToneX`
 
 ---
 
