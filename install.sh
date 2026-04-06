@@ -40,4 +40,4 @@ echo "udev rules reloaded."
 
 echo ""
 echo "Done. Unplug and replug ToneX — it should initialize automatically."
-echo "Init log: /tmp/tonex_udev_init.log"
+echo "Init log: $INSTALL_DIR/logs/tonex_udev_init.log"

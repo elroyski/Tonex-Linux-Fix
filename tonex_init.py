@@ -5,6 +5,7 @@ Replicates the CDC ACM + UAC2 clock setup that Windows driver performs.
 """
 
 import sys
+import argparse
 import struct
 import usb.core
 import usb.util
@@ -18,7 +19,7 @@ AUDIO_INTERFACES = [2, 3, 4, 5, 6]  # AudioControl + AudioStreaming + MIDI
 # UAC2 clock: Clock Source ID=7, AudioControl Interface=2
 CLOCK_ID   = 7
 AC_IFACE   = 2
-SAMPLE_RATE = 44100
+SUPPORTED_RATES = [44100, 48000]
 
 # UAC2 bRequest codes
 GET_CUR = 0x81
@@ -115,6 +116,14 @@ def check_clock(dev):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="ToneX USB initialization")
+    parser.add_argument(
+        "--rate", type=int, default=44100, choices=SUPPORTED_RATES,
+        help="Sample rate to configure: 44100 or 48000 (default: 44100)",
+    )
+    args = parser.parse_args()
+    sample_rate = args.rate
+
     dev = find_tonex()
     detach_kernel_drivers(dev, CDC_INTERFACES)
     detached_audio = detach_kernel_drivers(dev, AUDIO_INTERFACES)
@@ -129,7 +138,7 @@ def main():
         valid_before, rate_before = check_clock(dev)
 
         # 3. Ustaw częstotliwość próbkowania
-        set_sample_rate(dev, SAMPLE_RATE)
+        set_sample_rate(dev, sample_rate)
         time.sleep(0.1)
 
         # 4. Sprawdź stan zegara po
