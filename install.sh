@@ -30,7 +30,7 @@ echo "pyusb installed."
 
 # 3. Install udev rule
 cat > "$UDEV_RULE" << 'EOF'
-ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="1963", ATTRS{idProduct}=="0068", RUN+="/usr/local/lib/tonex-init/tonex_udev_init.sh"
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="1963", ATTRS{idProduct}=="0068", RUN+="/usr/local/lib/tonex-init/tonex_udev_init.sh"
 EOF
 echo "udev rule installed: $UDEV_RULE"
 
