@@ -59,7 +59,10 @@ def reattach_kernel_drivers(dev, interfaces):
             dev.attach_kernel_driver(iface)
             print(f"Reattached kernel driver on interface {iface}")
         except usb.core.USBError as e:
-            print(f"Warning: could not reattach interface {iface}: {e}")
+            # EBUSY (16): kernel already reclaimed the interface — expected
+            # ENOENT (2): UAC2 streaming interface at alt-setting 0 has no driver — expected
+            if e.errno not in (2, 16):
+                print(f"Warning: could not reattach interface {iface}: {e}")
 
 
 def set_line_coding(dev):
