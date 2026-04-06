@@ -26,18 +26,33 @@ fi
 
 python3 -m venv "$INSTALL_DIR/venv"
 "$INSTALL_DIR/venv/bin/pip" install --quiet pyusb
-echo "pyusb installed."
 
 # 3. Install udev rule
 cat > "$UDEV_RULE" << 'EOF'
 ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="1963", ATTRS{idProduct}=="0068", RUN+="/usr/local/lib/tonex-init/tonex_udev_init.sh"
 EOF
-echo "udev rule installed: $UDEV_RULE"
 
 # 4. Reload udev
 udevadm control --reload-rules
-echo "udev rules reloaded."
+
+W=63
+line() { printf "│ %-${W}s │\n" "$1"; }
+sep()  { printf "├"; printf '─%.0s' $(seq 1 $((W+2))); printf "┤\n"; }
 
 echo ""
-echo "Done. Unplug and replug ToneX — it should initialize automatically."
-echo "Init log: $INSTALL_DIR/logs/tonex_udev_init.log"
+printf "┌"; printf '─%.0s' $(seq 1 $((W+2))); printf "┐\n"
+line ""
+line "  ToneX USB Audio - Linux Init"
+line ""
+sep
+line "  Install dir  : $INSTALL_DIR"
+line "  udev rule    : $UDEV_RULE"
+line "  Init log     : $INSTALL_DIR/logs/"
+line "  Sample rate  : 44100 Hz"
+sep
+line "  Unplug and replug ToneX - it will initialize automatically."
+sep
+line "  https://github.com/elroyski/Tonex-Linux-Fix"
+line ""
+printf "└"; printf '─%.0s' $(seq 1 $((W+2))); printf "┘\n"
+echo ""
