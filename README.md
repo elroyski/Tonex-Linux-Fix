@@ -1,11 +1,19 @@
 # ToneX USB Audio — Linux Setup
 
+## Supported Devices
+
+This script supports:
+
+- **IK Multimedia ToneX Pedal** (PID: `0x0068`, USB ID `1963:0068`)
+- **IK Multimedia ToneX One** (PID: `0x00d1`, USB ID `1963:00d1`)
+
+---
+
 ## Problem
 
-The IK Multimedia ToneX Pedal (USB ID `1963:0068`) does not work as an audio
-interface immediately after plugging into Linux. The device requires initialization
-of its CDC ACM (serial) port and rebinding of audio interfaces to the
-`snd-usb-audio` driver.
+IK Multimedia ToneX devices do not work as audio interfaces immediately after
+plugging into Linux. Each device requires initialization of its CDC ACM (serial)
+port and rebinding of audio interfaces to the `snd-usb-audio` driver.
 
 Without initialization, `arecord`/Reaper reports `Input/output error` even though
 the card appears in `aplay -l`.
@@ -14,14 +22,14 @@ the card appears in `aplay -l`.
 
 ## Device Technical Specs
 
-| Parameter | Value |
-|---|---|
-| USB Vendor:Product | `1963:0068` |
-| Audio class | UAC2 (USB Audio Class 2.0) |
-| Format | S32_LE (24-bit in 32-bit container) |
-| Sample rate | **44100 Hz** |
-| Channels | 2 (stereo) |
-| CDC baud rate | 115200, 8N1 |
+| Parameter | ToneX Pedal | ToneX One |
+|---|---|---|
+| USB Vendor:Product | `1963:0068` | `1963:00d1` |
+| Audio class | UAC2 (USB Audio Class 2.0) | UAC2 (USB Audio Class 2.0) |
+| Format | S32_LE (24-bit in 32-bit container) | S32_LE (24-bit in 32-bit container) |
+| Sample rate | **44100 Hz** | **44100 Hz** |
+| Channels | 2 (stereo) | 2 (stereo) |
+| CDC baud rate | 115200, 8N1 | 115200, 8N1 |
 
 ---
 
