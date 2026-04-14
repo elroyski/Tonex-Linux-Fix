@@ -11,7 +11,7 @@ import usb.util
 import time
 
 VENDOR_ID  = 0x1963
-PRODUCT_ID = 0x0068
+PRODUCT_IDS = [0x0068, 0x00d1]
 CDC_INTERFACES   = [0, 1]     # CDC Control + CDC Data
 AUDIO_INTERFACES = [2, 3, 4, 5, 6]  # AudioControl + AudioStreaming + MIDI
 
@@ -31,12 +31,13 @@ CS_CLOCK_VALID_CONTROL = 0x02
 
 
 def find_tonex():
-    dev = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
-    if dev is None:
-        print("ERROR: ToneX not found.")
-        sys.exit(1)
-    print(f"Found: {dev.manufacturer} {dev.product} (s/n {dev.serial_number})")
-    return dev
+    for pid in PRODUCT_IDS:
+        dev = usb.core.find(idVendor=VENDOR_ID, idProduct=pid)
+        if dev is not None:
+            print(f"Found: {dev.manufacturer} {dev.product} (PID {hex(pid)})")
+            return dev
+    print("ERROR: No ToneX device found.")
+    sys.exit(1)
 
 
 def detach_kernel_drivers(dev, interfaces):
