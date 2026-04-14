@@ -9,6 +9,12 @@ This script supports:
 
 ---
 
+## Acknowledgements
+
+- [@cmfindlay](https://github.com/cmfindlay) — added support for the ToneX One (PID: `0x00d1`, USB ID `1963:00d1`)
+
+---
+
 ## Problem
 
 IK Multimedia ToneX devices do not work as audio interfaces immediately after
