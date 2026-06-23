@@ -30,6 +30,8 @@ python3 -m venv "$INSTALL_DIR/venv"
 # 3. Install udev rule
 cat > "$UDEV_RULE" << 'EOF'
 ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="1963", ATTRS{idProduct}=="0068", RUN+="/usr/local/lib/tonex-init/tonex_udev_init.sh"
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="1963", ATTRS{idProduct}=="00d1", RUN+="/usr/local/lib/tonex-init/tonex_udev_init.sh"
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="1963", ATTRS{idProduct}=="00d5", RUN+="/usr/local/lib/tonex-init/tonex_udev_init.sh"
 EOF
 
 # 4. Reload udev

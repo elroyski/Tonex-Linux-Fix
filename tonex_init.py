@@ -11,7 +11,7 @@ import usb.util
 import time
 
 VENDOR_ID  = 0x1963
-PRODUCT_IDS = [0x0068, 0x00d1]
+PRODUCT_IDS = [0x0068, 0x00d1, 0x00d5]
 CDC_INTERFACES   = [0, 1]     # CDC Control + CDC Data
 AUDIO_INTERFACES = [2, 3, 4, 5, 6]  # AudioControl + AudioStreaming + MIDI
 
